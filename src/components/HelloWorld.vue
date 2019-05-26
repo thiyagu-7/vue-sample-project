@@ -83,14 +83,45 @@
         >
       </li>
     </ul>
+    <div>
+      Preloaded value - {{preLoad}} <br/>
+    
+    </div>
+    <br/>
+    <div>
+      <button v-on:click="getData"> Fetch dynamic data </button>
+      <br/>
+      Dynamic data - {{info}}
+    </div> 
   </div>
 </template>
 
 <script>
+import axios from "axios"
+
 export default {
   name: "HelloWorld",
   props: {
     msg: String
+  },
+  data() {
+    return {
+      preLoad: "Should not be shown",
+      info: "Initial value"
+    }
+  },
+  methods: {
+    getData() {
+      console.log("Called");
+      axios
+      .get('https://api.coindesk.com/v1/bpi/currentprice.json')
+      .then(response => (this.info = response))
+    }
+  },
+  mounted () {
+    axios
+      .get('https://api.coindesk.com/v1/bpi/historical/close.json')
+      .then(response => (this.preLoad = response))
   }
 };
 </script>
